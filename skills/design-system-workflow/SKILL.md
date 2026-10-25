@@ -9,15 +9,25 @@ Two lanes: **diverge** (ignore the system on purpose) and **converge** (map back
 
 ## Before you start
 
-1. Look for `design-system.config.md` in the repo root. If it exists, read it: it points to token files, the component folder, the framework, and constraints.
+1. Look for `design-system.config.md` in the repo root. If it exists, read it: it points to the adapter, token files, the component folder, and constraints.
 2. If it does not exist, ask the user for: framework, where tokens live, where components live, and non-negotiable constraints. Then offer to create the config from `design-system.config.md` (the example in this skill).
-3. Ask which phase the user wants to run. Default to Phase 1, then continue in order. The user may run phases separately.
+3. **Pick the adapter.** Read `adapters/README.md`, then the adapter named in the config's `adapter` field (`tailwind`, `bootstrap`, `css-variables`). If it is `auto` or missing, follow the detection order in `adapters/README.md` and tell the user which adapter you chose. If nothing matches, use `css-variables` and ask the user to confirm where tokens live.
+4. Ask which phase the user wants to run. Default to Phase 1, then continue in order. The user may run phases separately.
+
+## Working with adapters
+
+- All phases work in the **common token model** (see `adapters/README.md`). Never mix framework syntax into ideas, scores, or the gap log.
+- Phase 1 uses the adapter's **Read** and **Components** sections to inventory tokens and components.
+- Phase 4 uses the adapter's **Write** section to express the token diff in the framework's native format.
+- Framework defaults (Tailwind's default palette, Bootstrap's default variables) are not project tokens. Do not list them unless the user asks.
+- A project can use more than one adapter (e.g. Tailwind plus CSS variables). Read each one that applies and note which source each token came from.
+- If the user's setup does not fit any adapter, use `css-variables` plus the `overrides` field in the config, and suggest adding a new adapter (see `adapters/README.md`).
 
 ## Phases
 
 ### Phase 1: Audit (anchor in what exists)
-- Inventory tokens: color, type, spacing, radius, elevation, motion.
-- Inventory components: name, file path, variants, where used.
+- Inventory tokens with the adapter's **Read** steps: color, type, spacing, radius, elevation, motion. Record each in the common token model, with its source file.
+- Inventory components with the adapter's **Components** steps: name, file path, variants, where used. List hard-coded values (drift) separately.
 - Record fixed constraints: framework, accessibility level, brand rules, data density, browser/device support.
 - Output: a short audit summary. Do not invent tokens or components. If something cannot be found, say so.
 
@@ -38,7 +48,7 @@ Two lanes: **diverge** (ignore the system on purpose) and **converge** (map back
   - **Adapt**: rework the idea to fit the system.
   - **Extend**: propose a new token or component.
   - **Exception**: ship as a documented one-off, with a reason and an owner.
-- Output a spec using `spec-template.md`: component list, token diff, and gap log.
+- Output a spec using `spec-template.md`: component list, token diff, and gap log. Show the token diff twice: once in the common model, and once in the framework's native format using the adapter's **Write** section.
 
 ### Phase 5: Ship and learn
 - Help implement against the real code. Prefer existing components and tokens.
@@ -48,6 +58,7 @@ Two lanes: **diverge** (ignore the system on purpose) and **converge** (map back
 ## Rules
 
 - Never claim a token or component exists without finding it in the repo or config.
+- Never edit the real token files or framework config until the user approves the spec. Adapter output is a proposed diff.
 - Keep the diverge lane and the convert lane visibly separate in outputs.
 - Every gap must have a decision (Adapt, Extend, or Exception). No gap is left open.
 - Prefer Adapt over Extend, and Extend over Exception.

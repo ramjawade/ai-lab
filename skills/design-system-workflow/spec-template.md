@@ -29,6 +29,14 @@
 | Token | Replacement |
 |-------|-------------|
 
+### Native format (from the adapter's Write section)
+Adapter: `<tailwind | bootstrap | css-variables>`
+File: `<path of the file to change>`
+
+```
+<proposed lines in the framework's own syntax>
+```
+
 ## Gap log summary
 - Adapt: <n>
 - Extend: <n>
