@@ -30,4 +30,4 @@ Python • LLM APIs • MCP • Jupyter
 
 ## Author
 
-Yash, Lead Software Engineer
+Ram, Lead Software Engineer
